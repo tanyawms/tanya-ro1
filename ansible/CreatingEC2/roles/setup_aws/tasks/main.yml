@@ -35,32 +35,8 @@
         to_port: 3306
         cidr_ip: 0.0.0.0/0
       - proto: tcp
-        from_port: 6379
-        to_port: 6379
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 8183
-        to_port: 8183
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 5601
-        to_port: 5601
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 5044 
-        to_port: 5044 
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
         from_port: 9000
         to_port: 9000
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 9200
-        to_port: 9200 
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 9300
-        to_port: 9300
         cidr_ip: 0.0.0.0/0
     rules_egress:
       - proto: all

@@ -10,9 +10,11 @@ These instructions are for an Ubuntu installation with a username of ubuntu.
 
 # Create user ubuntu and add to sudo users (if necessary)
 The commands should be run as root user
+
 Commands
 - adduser ubuntu
 - usermod -aG sudo ubuntu
+
 Exit as root user
 
 # Install Software
@@ -33,9 +35,6 @@ Commands
 - sudo apt-get update
 - sudo apt-get install git -y
 - sudo apt-get update
-??- sudo apt-get install nodejs npm -y
-??- sudo apt-get update
-??- sudo apt-get install npm
 
 # Change to home directory of the Ubuntu user
 - cd /home/ubuntu
@@ -73,19 +72,22 @@ Commands
 # Create a file with AWS crdentials
 - vi ~/.boto
 ### This is the file content
-  [Credentials]
-  aws_access_key_id = [your access key id]
-  aws_secret_access_key = [your secret access key]
+[Credentials]
+aws_access_key_id = [your access key id]
+aws_secret_access_key = [your secret access key]
   
 # Run these commands as root
 - wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py -O /etc/ansible/ec2.py
 - wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.ini -O /etc/ansible/ec2.ini
 - chmod +x /etc/ansible/ec2.py
-### Edit /etc/ansible/ansible.cfg
-### Uncomment the line and/or make the change
+
+# Edit /etc/ansible/ansible.cfg
+Uncomment the line and/or make the change
+
 - vi /etc/ansible/ansible.cfg
-inventory      = /home/ubuntu/ansible/hosts
-host_key_checking=False
+- inventory      = /home/ubuntu/ansible/hosts
+- host_key_checking=False
+
 Exit as root
 
 # Run the playbook
