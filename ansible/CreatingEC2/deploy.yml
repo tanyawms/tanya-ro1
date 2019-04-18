@@ -1,0 +1,17 @@
+- name: Create AWS instance
+  hosts: 127.0.0.1
+  connection: local
+  remote_user: ubuntu
+  roles:
+    - setup_aws
+
+- name: Configure EC2
+  hosts: ec2_hosts
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: false
+  roles:
+    - configure
+    - guessno 

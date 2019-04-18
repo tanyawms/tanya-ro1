@@ -1,0 +1,19 @@
+---
+# Get Updates
+- name: Update 1
+  raw: apt-get update -y
+  
+- name: Install Git
+  raw: sudo apt-get install git -y
+
+- name: Update 2 
+  raw: apt-get update -y
+  
+- name: Install Node 
+  raw: apt-get install nodejs npm -y 
+
+- name: Install NPM
+  raw: apt-get install npm -y
+
+- name: Install PM2
+  raw: npm install -g pm2

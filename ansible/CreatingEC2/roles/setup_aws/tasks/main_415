@@ -1,0 +1,134 @@
+---
+
+# Set up AWS infrastructure
+
+- name: Create web security group
+  ec2_group:
+    name: "{{ web_securitygn}}"
+    description: "Web Security Group allows ports 22_80_443_8080_5601_9200"
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpcid }}"
+    state: present
+    rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 443
+        to_port: 443
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 8080
+        to_port: 8080 
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 3000
+        to_port: 3000
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 6379
+        to_port: 6379
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 8183
+        to_port: 8183
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 5601
+        to_port: 5601
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 5044 
+        to_port: 5044 
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 9000
+        to_port: 9000
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 9200
+        to_port: 9200 
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 9300
+        to_port: 9300
+        cidr_ip: 0.0.0.0/0
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+  register: tasweb_sg
+
+- name: Create db security group
+  ec2_group:
+    name: "{{ db_securitygn}}"
+    description: "DB Security Group allows ports 3306"
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpcid }}"
+    state: present
+    rules:
+      - proto: tcp
+        from_port: 3306
+        to_port: 3306
+        cidr_ip: 0.0.0.0/0
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+  register: tasdb_sg
+
+- name: Add EC2 instance
+  ec2:
+    key_name: "{{ aws_keyname }}"
+    instance_type: "{{ ec2_instance_type }}"
+    image: "{{ ec2_image }}"
+    region: "{{ aws_region }}"
+    group_id: "{{ web_securitygid }}"
+    vpc_subnet_id: "{{ subnetid }}" 
+    instance_tags:
+      env: "{{ prod_env }}"
+    wait: yes
+    assign_public_ip: yes
+    exact_count: 1
+    count_tag:
+      env: "{{ prod_env }}" 
+  register: ec2 
+
+- name: Add IP to ec2_hosts group
+  add_host: 
+     hostname: "{{ item.public_ip }}" 
+     groups: ec2_hosts
+  with_items: "{{ ec2.instances }}"
+
+- name: Create RDS
+  rds:
+    command: create
+    instance_name: "{{DB_NAME }}"
+    region: "{{ aws_region }}"
+    vpc_security_groups: "{{ db_securitygid }}"
+    db_engine: mariadb
+    size: 5
+    instance_type: db.t2.micro
+    db_name: "{{ DB_NAME }}"
+    username: "{{ DB_USERNAME }}"
+    password: "{{ DB_PASSWORD }}"
+    wait: yes
+    wait_timeout: 1000
+  register: rds
+
+- name: Add RDS endpoint to db group
+  add_host:
+    hostname: "{{ rds.instance.endpoint }}"
+    groups: db
+
+- name: Wait for SSH to come up
+  wait_for:
+     host: "{{ item.public_ip }}"
+     port: 22
+     delay: 60
+     timeout: 320
+     state: started
+  with_items: "{{ ec2.instances }}"

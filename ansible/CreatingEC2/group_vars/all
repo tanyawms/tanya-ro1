@@ -1,0 +1,11 @@
+aws_region: ap-northeast-2
+aws_keyname: tas_react1
+instance_type: t2.micro
+ami: ami-078e96948945fc2c9
+ec2_image: ami-078e96948945fc2c9
+ec2_instance_type: t2.micro
+project_name: tas_challenge
+web_securitygn: tasweb_sg
+web_securitygid: sg-055c2db50cfa71999
+vpcid: vpc-ca3732a3
+subnetid: subnet-6290d22f

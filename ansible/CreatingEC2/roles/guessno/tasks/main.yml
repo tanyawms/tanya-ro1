@@ -1,0 +1,24 @@
+---
+
+- name: Clone React App
+  raw: git clone https://github.com/drminnaar/react-masterminds.git
+ 
+- name: Install App
+  command: npm install
+  args:
+    chdir: $PWD/react-masterminds
+
+- name: Install App2
+  command: npm dedupe
+  args:
+    chdir: $PWD/react-masterminds  
+
+- name: Build App
+  shell: npm run build
+  args:
+    chdir: $PWD/react-masterminds
+ 
+- name: Run App
+  shell: pm2 start npm --name react-masterminds -- run serve
+  args:
+    chdir: $PWD/react-masterminds
