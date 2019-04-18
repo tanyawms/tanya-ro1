@@ -69,12 +69,12 @@ Commands
 # Remove unused Repo files
 - sudo rm -r /home/ubuntu/tanya-ro1
 
-# Create a file with AWS crdentials
+# Create a file with AWS credentials
 - vi ~/.boto
 ### This is the file content
-[Credentials]
-aws_access_key_id = [your access key id]
-aws_secret_access_key = [your secret access key]
+--  [Credentials]
+--  aws_access_key_id = [your access key id]
+--  aws_secret_access_key = [your secret access key]
   
 # Run these commands as root
 - wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py -O /etc/ansible/ec2.py
